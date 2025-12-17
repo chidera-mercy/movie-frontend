@@ -480,7 +480,7 @@ function displayInsightImages(images) {
         return `
             <div class="chart-container" style="background: linear-gradient(135deg, #000000, #000000, #8b0000, #000000, #000000); background-size: 400% 400%; animation: gradientShift 8s ease infinite;">
                 <h3 class="chart-title">${title}</h3>
-                <img src="http://localhost:5000/insights/${filename}" 
+                <img src="https://movielens-api-wmq9.onrender.com/api/insights/${filename}" 
                      alt="${title}"
                      style="width: 100%; height: auto; border-radius: 8px;"
                      onerror="this.parentElement.innerHTML='<p style=\\'color: #888; text-align: center;\\'>Failed to load image</p>'">
