@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MovieLens Recommender</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Asimovian&family=Caesar+Dressing&family=Rubik+Glitch&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="background-posters"></div>
+
+    <!-- Navigation -->
+    <nav id="navbar">
+        <ul>
+            <li><a href="#home">Home</a></li>
+            <li><a href="#recommendations">Get Recommendations</a></li>
+            <li><a href="#search">Similar Movies</a></li>
+            <li><a href="#insights">Insights</a></li>
+            <li><a href="#about">About</a></li>
+        </ul>
+    </nav>
+
+    <!-- Home Section -->
+    <section id="home">
+        <h1>🎬 MovieLens Recommender</h1>
+        <p>Discover your next favorite movie powered by Machine Learning</p>
+        <button class="cta-button" onclick="scrollToSection('recommendations')">Start Exploring ↓</button>
+    </section>
+
+    <!-- Recommendations Section -->
+    <section id="recommendations">
+        <h2>Get Movie Recommendations</h2>
+        
+        <div class="content-card">
+            <h3 id="select-preferences" style="margin-bottom: 1rem;">Tell us what you're in the mood for:</h3>
+            
+            <!--Genre Selection-->
+            <div class="form-group">
+                <label>Select genres you enjoy:</label>
+                <div class="genre-grid">
+                    <input type="checkbox" id="action" class="genre-checkbox" value="Action">
+                    <label for="action" class="genre-label">Action</label>
+
+                    <input type="checkbox" id="adventure" class="genre-checkbox" value="Adventure">
+                    <label for="adventure" class="genre-label">Adventure</label>
+
+                    <input type="checkbox" id="animation" class="genre-checkbox" value="Animation">
+                    <label for="animation" class="genre-label">Animation</label>
+
+                    <input type="checkbox" id="children" class="genre-checkbox" value="Children">
+                    <label for="children" class="genre-label">Children</label>
+                    
+                    <input type="checkbox" id="comedy" class="genre-checkbox" value="Comedy">
+                    <label for="comedy" class="genre-label">Comedy</label>
+
+                    <input type="checkbox" id="crime" class="genre-checkbox" value="Crime">
+                    <label for="crime" class="genre-label">Crime</label>
+
+                    <input type="checkbox" id="documentary" class="genre-checkbox" value="Documentary">
+                    <label for="documentary" class="genre-label">Documentary</label>
+                    
+                    <input type="checkbox" id="drama" class="genre-checkbox" value="Drama">
+                    <label for="drama" class="genre-label">Drama</label>
+
+                    <input type="checkbox" id="fantasy" class="genre-checkbox" value="Fantasy">
+                    <label for="fantasy" class="genre-label">Fantasy</label>
+
+                    <input type="checkbox" id="film-noir" class="genre-checkbox" value="Film-Noir">
+                    <label for="film-noir" class="genre-label">Film-Noir</label>
+
+                    <input type="checkbox" id="horror" class="genre-checkbox" value="Horror">
+                    <label for="horror" class="genre-label">Horror</label>
+
+                    <input type="checkbox" id="imax" class="genre-checkbox" value="IMAX">
+                    <label for="imax" class="genre-label">IMAX</label>
+
+                    <input type="checkbox" id="musical" class="genre-checkbox" value="Musical">
+                    <label for="musical" class="genre-label">Musical</label>
+
+                    <input type="checkbox" id="mystery" class="genre-checkbox" value="Mystery">
+                    <label for="mystery" class="genre-label">Mystery</label>
+
+                    <input type="checkbox" id="romance" class="genre-checkbox" value="Romance">
+                    <label for="romance" class="genre-label">Romance</label>
+                    
+                    <input type="checkbox" id="scifi" class="genre-checkbox" value="Sci-Fi">
+                    <label for="scifi" class="genre-label">Sci-Fi</label>
+                    
+                    <input type="checkbox" id="thriller" class="genre-checkbox" value="Thriller">
+                    <label for="thriller" class="genre-label">Thriller</label>
+                    
+                    <input type="checkbox" id="war" class="genre-checkbox" value="War">
+                    <label for="war" class="genre-label">War</label>
+
+                    <input type="checkbox" id="western" class="genre-checkbox" value="Western">
+                    <label for="western" class="genre-label">Western</label>
+                </div>
+            </div>
+
+            <!-- Movie Era Preference -->
+            <div class="form-group">
+                <label for="age-preference">Movie Era:</label>
+                <select id="age-preference">
+                    <option value="">No Preference</option>
+                    <option value="recent">Recent (Last 10 years)</option>
+                    <option value="modern">Modern (1995-2015)</option>
+                    <option value="vintage">Vintage (1970-1995)</option>
+                    <option value="classic">Classic (Before 1970)</option>
+                </select>
+            </div>
+
+            <!-- Popularity Preference -->
+            <div class="form-group">
+                <label for="popularity">Movie Type:</label>
+                <select id="popularity">
+                    <option value="">No Preference</option>
+                    <option value="popular">Blockbusters & Popular</option>
+                    <option value="hidden_gems">Hidden Gems & Indie</option>
+                </select>
+            </div>
+
+            <!--Number of recommendations -->
+            <div class="form-group">
+                <label for="num-recommendations">How many movies?</label>
+                <select id="num-recommendations">
+                    <option value="5">5</option>
+                    <option value="10" selected>10</option>
+                    <option value="15">15</option>
+                    <option value="20">20</option>
+                </select>
+            </div>
+
+            <!-- Minimum rating -->
+            <div class="form-group">
+                <label for="min-rating">Minimum rating (optional)</label>
+                <input type="number" id="min-rating" min="0" max="5" step="0.5" placeholder="e.g., 4.0">
+            </div>
+
+            <button onclick="getRecommendations()">Get Recommendations</button>
+        </div>
+
+        <div class="loading" id="rec-loading">
+            <div class="spinner"></div>
+            <p style="margin-top: 1rem;">Finding perfect movies for you...</p>
+        </div>
+
+        <div id="recommendations-results" class="movie-grid"></div>
+    </section>
+
+    <!-- Similar Movies Section -->
+    <section id="search">
+        <h2>🔍 Find Similar Movies</h2>
+        
+        <div class="content-card">
+            <div class="form-group">
+                <label for="movie-search">Search for a movie:</label>
+                <div class="search-container">
+                    <input type="text" id="movie-search" placeholder="Type a movie name..." oninput="searchMovies(this.value)">
+                    <div class="search-results" id="search-results"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="loading" id="similar-loading">
+            <div class="spinner"></div>
+            <p style="margin-top: 1rem;">Finding similar movies...</p>
+        </div>
+
+        <div id="similar-movie-results"></div>
+        <div id="similar-movies-grid" class="movie-grid"></div>
+    </section>
+
+    <!-- Insights Section -->
+    <section id="insights">
+        <h2>📈 Platform Analytics</h2>
+        
+        <div class="loading" id="insights-loading" style="display: none;">
+            <div class="spinner"></div>
+            <p style="margin-top: 1rem;">Loading analytics data...</p>
+        </div>
+
+        <div id="insights-stats" class="stats-grid" style="display: none;">
+            <div class="stat-card">
+                <div class="stat-value" id="total-movies">-</div>
+                <div class="stat-label">Total Movies</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="avg-rating">-</div>
+                <div class="stat-label">Average Rating</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="total-ratings">-</div>
+                <div class="stat-label">Total Ratings</div>
+            </div>
+        </div>
+
+        <div class="chart-grid" id="charts-container" style="display: none;">
+            <div class="chart-container">
+                <h3 class="chart-title">Rating Distribution</h3>
+                <canvas id="ratingChart"></canvas>
+            </div>
+            
+            <div class="chart-container">
+                <h3 class="chart-title">Top 10 Genres</h3>
+                <canvas id="genreChart"></canvas>
+            </div>
+            
+            <div class="chart-container" style="grid-column: span 2;">
+                <h3 class="chart-title">Movies by Rating Category</h3>
+                <canvas id="categoryChart"></canvas>
+            </div>
+        </div>
+
+        <button onclick="loadInsights()" id="load-insights-btn" style="margin-top: 2rem;">Load Analytics Data</button>
+    </section>
+
+    <!-- About Section -->
+    <section id="about">
+        <h2>About This Project</h2>
+        
+        <div class="content-card">
+            <h3 style="margin-bottom: 1rem;">How It Works</h3>
+            <p style="line-height: 1.8; color: #b0b0b0;">
+                Our movie recommendation system leverages multiple machine learning models to provide accurate and personalized suggestions:
+            </p>
+            <ul style="margin: 1rem 0 1rem 2rem; line-height: 2; color: #b0b0b0;">
+                <li><strong>Popularity-Based Model:</strong> Recommends trending and highly-rated movies</li>
+                <li><strong>Content-Based Filtering:</strong> Analyzes movie features like genres, tags, and metadata</li>
+                <li><strong>Advanced ML Models:</strong> Uses KNN, Random Forest, and other algorithms for predictions</li>
+            </ul>
+
+            <h3 style="margin: 2rem 0 1rem;">Built With</h3>
+            <div class="tech-stack">
+                <span class="tech-badge">Python</span>
+                <span class="tech-badge">Scikit-learn</span>
+                <span class="tech-badge">JavaScript</span>
+                <span class="tech-badge">Flask API</span>
+                <span class="tech-badge">MovieLens Dataset</span>
+                <span class="tech-badge">Chart.js</span>
+            </div>
+
+            <h3 style="margin: 2rem 0 1rem;">Team</h3>
+            <p style="color: #b0b0b0;">Mercy Chidera, Maame Dankwa, Joel Ackam</p>
+            
+            <p style="margin-top: 2rem; color: #888; font-size: 0.9rem;">
+                📧 Contact | 🔗 <a href="#" style="color: #e50914;">GitHub Repository</a>
+            </p>
+        </div>
+    </section>
+
+    <script src="../js/app.js"></script>
+</body>
+</html>
